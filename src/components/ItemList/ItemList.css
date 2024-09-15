@@ -1,0 +1,51 @@
+.ListGroup {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1rem;
+    justify-content: center;
+}
+
+.CardItem {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    width: 300px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.CardItem:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.Header {
+    background-color: #f4f4f4;
+    padding: 1rem;
+}
+
+.ItemImg {
+    width: 100%;
+    height: auto;
+}
+
+section {
+    padding: 1rem;
+}
+
+.ItemFooter {
+    background-color: #f4f4f4;
+    padding: 1rem;
+    text-align: center;
+}
+
+.Option {
+    color: #007bff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.Option:hover {
+    text-decoration: underline;
+}

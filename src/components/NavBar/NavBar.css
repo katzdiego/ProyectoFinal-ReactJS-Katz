@@ -1,0 +1,62 @@
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 20px;
+    background-color: #333;
+    color: white;
+}
+
+nav h2 {
+    font-size: 1.8rem;
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+}
+
+nav div:first-of-type {
+    font-size: 2rem;
+}
+
+nav .nav-links {
+    display: flex;
+    gap: 15px;
+}
+
+nav .nav-links a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    transition: color 0.3s ease;
+}
+
+nav .nav-links a:hover {
+    color: #e3c62d;
+}
+
+nav .nav-links a.active {
+    font-weight: bold;
+    color: #e3c62d;
+}
+
+nav .cart-widget {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+}
+
+nav button {
+    background-color: #555;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Arial', sans-serif;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+nav button:hover {
+    background-color: #777;
+}
