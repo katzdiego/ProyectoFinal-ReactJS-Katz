@@ -7,12 +7,12 @@ const ItemDetailContainer = () => {
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { id } = useParams();
+    const { productId } = useParams(); // Cambiado de id a productId
 
     useEffect(() => {
         setLoading(true);
         setError(null);
-        getProductById(id)
+        getProductById(productId) // Cambiado de id a productId
             .then(response => {
                 setProduct(response);
                 setLoading(false);
@@ -22,7 +22,7 @@ const ItemDetailContainer = () => {
                 setLoading(false);
                 console.error("Error al obtener el producto:", error);
             });
-    }, [id]);
+    }, [productId]); // Cambiado de id a productId
 
     if (loading) {
         return <p>Cargando producto...</p>;

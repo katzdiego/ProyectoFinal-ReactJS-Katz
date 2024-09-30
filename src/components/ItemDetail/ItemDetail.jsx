@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import ItemCount from '../ItemCount/ItemCount';
+import { useCart } from '../../Context/CartContext';
 import './ItemDetail.css';
 
 const ItemDetail = ({ id, name, img, category, description, price, stock }) => {
     const [quantityAdded, setQuantityAdded] = useState(0);
+    const { addItemToCart } = useCart();
 
     const handleAdd = (quantity) => {
+        const item = { id, name, price };
         setQuantityAdded(quantity);
+        addItemToCart({ ...item, quantity });
         console.log('Cantidad agregada:', quantity);
     };
 
@@ -26,7 +30,7 @@ const ItemDetail = ({ id, name, img, category, description, price, stock }) => {
                 {quantityAdded > 0 && <p className="Info">Cantidad agregada: {quantityAdded}</p>}
             </section>
             <footer className="ItemFooter">
-                {quantityAdded === 0 ? (
+                {quantityAdded > 0 ? (
                     <ItemCount 
                         initial={1} 
                         stock={stock} 
