@@ -3,7 +3,7 @@ import ItemCount from '../ItemCount/ItemCount';
 import { useCart } from '../../Context/CartContext';
 import './ItemDetail.css';
 
-const ItemDetail = ({ id, name, description, price, stock, image }) => {
+const ItemDetail = ({ id, name, descripcion, price, stock, img }) => {
     const { addItemToCart, isInCart } = useCart();
 
     const handleAddToCart = (quantity) => {
@@ -16,12 +16,12 @@ const ItemDetail = ({ id, name, description, price, stock, image }) => {
 
     return (
         <div className="item-detail">
-            <img src={image} alt={name} />
+            <img src={img} alt={name} />
             <h2>{name}</h2>
-            <p>{description}</p>
-            <p>Precio: ${price}</p>
+            <p>{descripcion}</p>
+            <p>Precio: ${price.toFixed(2)}</p> 
             <p>Stock disponible: {stock}</p>
-            {isInCart({ id }) ? (
+            {isInCart(id) ? (
                 <p>Producto ya en el carrito</p>
             ) : (
                 <ItemCount 

@@ -5,7 +5,12 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
 
-  const addItemToCart = (item) => {
+  const addToCart = (item) => {
+    if (!item.id || !item.quantity) {
+      console.error('El item debe tener un id y una cantidad.');
+      return;
+    }
+
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
 
     if (existingItem) {
@@ -23,15 +28,15 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-  const removeItemFromCart = (item) => {
-    const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+  const removeFromCart = (itemId) => {
+    const existingItem = cartItems.find(cartItem => cartItem.id === itemId);
 
     if (existingItem) {
       if (existingItem.quantity === 1) {
-        setCartItems(cartItems.filter(cartItem => cartItem.id !== item.id));
+        setCartItems(cartItems.filter(cartItem => cartItem.id !== itemId));
       } else {
         setCartItems(cartItems.map(cartItem =>
-          cartItem.id === item.id
+          cartItem.id === itemId
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
         ));
@@ -43,14 +48,14 @@ export const CartProvider = ({ children }) => {
     setCartItems([]);
   };
 
-  const isInCart = (item) => {
-    return cartItems.some(cartItem => cartItem.id === item.id);
+  const isInCart = (itemId) => {
+    return cartItems.some(cartItem => cartItem.id === itemId);
   };
 
   const value = {
     cartItems,
-    addItemToCart,
-    removeItemFromCart,
+    addToCart,
+    removeFromCart,
     clearCart,
     isInCart
   };

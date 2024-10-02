@@ -4,9 +4,9 @@ import './NavBar.css';
 
 const NavBar = () => {
     return (
-        <nav aria-label="Main Navigation">
-            <h2>E-Commerce</h2>
-            <div role="img" aria-label="Computer icon">💻</div>
+        <nav aria-label="Main Navigation" className="navbar">
+            <h1 className="navbar-title">E-Commerce</h1>
+            <div role="img" aria-label="Icono de computadora" className="navbar-icon">💻</div>
             <div className="nav-links">
                 <NavLink 
                     to="/" 
@@ -17,7 +17,7 @@ const NavBar = () => {
                 <NavLink 
                     to="/category/celulares" 
                     className={({ isActive }) => (isActive ? 'active' : '')}>
-                    Celulares y accesorios
+                    Celulares y Accesorios
                 </NavLink>
 
                 <NavLink 

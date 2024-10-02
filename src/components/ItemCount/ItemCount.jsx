@@ -1,9 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import './ItemCount.css';
 
 const ItemCount = ({ stock, initial, onAdd }) => {
     const [quantity, setQuantity] = useState(initial);
+
+    useEffect(() => {
+        if (initial > stock) {
+            setQuantity(stock);
+        }
+    }, [initial, stock]);
 
     const increment = () => {
         if (quantity < stock) {
@@ -24,20 +30,34 @@ const ItemCount = ({ stock, initial, onAdd }) => {
     return (
         <div className='Counter'>
             <div className='Controls'>
-                <button className='Button' onClick={decrement} aria-label="Decrease quantity">-</button>
+                <button 
+                    className='Button' 
+                    onClick={decrement} 
+                    aria-label="Decrease quantity"
+                >
+                    -
+                </button>
                 <h4 className='Number'>{quantity}</h4>
-                <button className='Button' onClick={increment} aria-label="Increase quantity">+</button>
+                <button 
+                    className='Button' 
+                    onClick={increment} 
+                    aria-label="Increase quantity"
+                >
+                    +
+                </button>
             </div>
             <div>
                 <button
                     className='Button'
                     onClick={handleAddToCart}
-                    disabled={quantity > stock || quantity <= 0}
+                    disabled={quantity <= 0}
                     aria-label={`Add ${quantity} items to cart`}
                 >
                     Add to Cart
                 </button>
-                {quantity > stock && <p style={{ color: 'red' }}>Exceeded stock limit!</p>}
+                {quantity > stock && (
+                    <p style={{ color: 'red' }}>Exceeded stock limit!</p>
+                )}
             </div>
         </div>
     );

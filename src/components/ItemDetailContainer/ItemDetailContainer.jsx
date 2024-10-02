@@ -12,24 +12,34 @@ const ItemDetailContainer = () => {
     const { addItemToCart } = useCart();
 
     useEffect(() => {
-        setLoading(true);
-        setError(null);
-        getProductById(productId)
-            .then(response => {
-                setProduct(response);
-            })
-            .catch(error => {
+        const fetchProduct = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await getProductById(productId);
+                if (response) {
+                    setProduct(response);
+                } else {
+                    setError("Producto no encontrado.");
+                }
+            } catch (error) {
                 setError("Error al obtener el producto.");
                 console.error("Error al obtener el producto:", error);
-            })
-            .finally(() => {
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+
+        fetchProduct();
     }, [productId]);
 
     const handleAddToCart = (quantity) => {
         if (product) {
-            addItemToCart({ ...product, quantity });
+            if (quantity <= product.stock) {
+                addItemToCart({ ...product, quantity });
+            } else {
+                console.error(`No se puede agregar más de ${product.stock} unidades de ${product.name}`);
+            }
         }
     };
 
@@ -38,7 +48,7 @@ const ItemDetailContainer = () => {
     }
 
     if (error) {
-        return <p>{error}</p>;
+        return <p className="error">{error}</p>;
     }
 
     return (
