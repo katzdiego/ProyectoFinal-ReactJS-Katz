@@ -1,44 +1,60 @@
-import React from "react";
-import { useCart } from "../../Context/CartContext";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { useCart } from '../../Context/CartContext';
+import './Cart.css';
 
 const Cart = () => {
-    const { cartItems, clearCart, removeItemFromCart } = useCart();
+    const { cartItems, removeItemFromCart, clearCart, addItemToCart } = useCart();
 
-    const totalPrice = cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0);
+    const handleRemove = (item) => {
+        removeItemFromCart(item);
+    };
+
+    const handleClearCart = () => {
+        clearCart();
+    };
+
+    const handleAddQuantity = (item) => {
+        addItemToCart(item);
+    };
+
+    const handleReduceQuantity = (item) => {
+        if (item.quantity > 1) {
+            removeItemFromCart(item);
+        } else {
+            handleRemove(item);
+        }
+    };
 
     return (
-        <div className="cart-container">
-            <h2>Carrito de Compras</h2>
-
+        <div className="cart">
+            <h2>Tu Carrito</h2>
             {cartItems.length === 0 ? (
-                <p>Tu carrito está vacío.</p>
+                <p>El carrito está vacío.</p>
             ) : (
-                <>
+                <div>
                     <ul>
                         {cartItems.map(item => (
-                            <li key={item.id} className="cart-item">
+                            <li key={item.id}>
+                                <img src={item.image} alt={item.name} />
                                 <div>
-                                    <p><strong>{item.name}</strong></p>
-                                    <p>Cantidad: {item.quantity}</p>
-                                    <p>Precio por unidad: ${item.price}</p>
-                                    <p>Subtotal: ${item.price * item.quantity}</p>
-
-                                    <button onClick={() => removeItemFromCart(item)}>Eliminar</button>
+                                    <h3>{item.name}</h3>
+                                    <p>Precio: ${item.price}</p>
+                                    <div className="quantity-controls">
+                                        <button onClick={() => handleReduceQuantity(item)}>-</button>
+                                        <span>{item.quantity}</span>
+                                        <button onClick={() => handleAddQuantity(item)}>+</button>
+                                    </div>
+                                    <button onClick={() => handleRemove(item)}>Eliminar</button>
                                 </div>
                             </li>
                         ))}
                     </ul>
-
-                    <h3>Total: ${totalPrice.toFixed(2)}</h3>
-
-                  
-                    <button onClick={clearCart} className="clear-cart-btn">Limpiar Carrito</button>
-
-                    <Link to="/checkout" className="checkout-link">
-                        <button className="checkout-btn">Ir a Checkout</button>
-                    </Link>
-                </>
+                    <button onClick={handleClearCart}>Limpiar Carrito</button>
+                    <p>
+                        Total: $
+                        {cartItems.reduce((total, item) => total + item.price * item.quantity, 0)}
+                    </p>
+                </div>
             )}
         </div>
     );

@@ -7,14 +7,18 @@ const ItemCount = ({ stock, initial, onAdd }) => {
 
     const increment = () => {
         if (quantity < stock) {
-            setQuantity(quantity + 1);
+            setQuantity(prevQuantity => prevQuantity + 1);
         }
     };
 
     const decrement = () => {
         if (quantity > 1) {
-            setQuantity(quantity - 1);
+            setQuantity(prevQuantity => prevQuantity - 1);
         }
+    };
+
+    const handleAddToCart = () => {
+        onAdd(quantity);
     };
 
     return (
@@ -27,7 +31,7 @@ const ItemCount = ({ stock, initial, onAdd }) => {
             <div>
                 <button
                     className='Button'
-                    onClick={() => onAdd(quantity)}
+                    onClick={handleAddToCart}
                     disabled={quantity > stock || quantity <= 0}
                     aria-label={`Add ${quantity} items to cart`}
                 >

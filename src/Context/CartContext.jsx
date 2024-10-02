@@ -9,31 +9,33 @@ export const CartProvider = ({ children }) => {
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
 
     if (existingItem) {
-      if (existingItem.quantity < item.stock) {
+      if (existingItem.quantity + item.quantity <= item.stock) {
         setCartItems(cartItems.map(cartItem =>
           cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
             : cartItem
         ));
       } else {
         console.error(`No se puede agregar más del producto "${item.name}". Stock máximo alcanzado.`);
       }
     } else {
-      setCartItems([...cartItems, { ...item, quantity: 1 }]);
+      setCartItems([...cartItems, { ...item, quantity: item.quantity }]);
     }
   };
 
   const removeItemFromCart = (item) => {
     const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
 
-    if (existingItem.quantity === 1) {
-      setCartItems(cartItems.filter(cartItem => cartItem.id !== item.id));
-    } else {
-      setCartItems(cartItems.map(cartItem =>
-        cartItem.id === item.id
-          ? { ...cartItem, quantity: cartItem.quantity - 1 }
-          : cartItem
-      ));
+    if (existingItem) {
+      if (existingItem.quantity === 1) {
+        setCartItems(cartItems.filter(cartItem => cartItem.id !== item.id));
+      } else {
+        setCartItems(cartItems.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: cartItem.quantity - 1 }
+            : cartItem
+        ));
+      }
     }
   };
 

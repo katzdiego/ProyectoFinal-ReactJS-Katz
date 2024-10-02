@@ -1,48 +1,36 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import React from 'react';
 import ItemCount from '../ItemCount/ItemCount';
 import { useCart } from '../../Context/CartContext';
 import './ItemDetail.css';
 
-const ItemDetail = ({ id, name, img, category, description, price, stock }) => {
-    const [quantityAdded, setQuantityAdded] = useState(0);
-    const { addItemToCart } = useCart();
+const ItemDetail = ({ id, name, description, price, stock, image }) => {
+    const { addItemToCart, isInCart } = useCart();
 
-    const handleAdd = (quantity) => {
-        const item = { id, name, price };
-        setQuantityAdded(quantity);
-        addItemToCart({ ...item, quantity });
-        console.log('Cantidad agregada:', quantity);
+    const handleAddToCart = (quantity) => {
+        if (quantity <= stock) {
+            addItemToCart({ id, name, price, stock, quantity });
+        } else {
+            console.error(`No se puede agregar más de ${stock} unidades de ${name}`);
+        }
     };
 
     return (
-        <article className="CardItem">
-            <header className="Header">
-                <h2 className="ItemHeader">{name}</h2>
-            </header>
-            <picture>
-                <img src={img} alt={name} className="ItemImg" />
-            </picture>
-            <section>
-                <p className="Info">Categoría: {category}</p>
-                <p className="Info">Descripción: {description}</p>
-                <p className="Info">Precio: ${price}</p>
-                {quantityAdded > 0 && <p className="Info">Cantidad agregada: {quantityAdded}</p>}
-            </section>
-            <footer className="ItemFooter">
-                {quantityAdded > 0 ? (
-                    <ItemCount 
-                        initial={1} 
-                        stock={stock} 
-                        onAdd={handleAdd}
-                    />
-                ) : (
-                    <Link to="/cart" className="Option">
-                        Ir al carrito
-                    </Link>
-                )}
-            </footer>
-        </article>
+        <div className="item-detail">
+            <img src={image} alt={name} />
+            <h2>{name}</h2>
+            <p>{description}</p>
+            <p>Precio: ${price}</p>
+            <p>Stock disponible: {stock}</p>
+            {isInCart({ id }) ? (
+                <p>Producto ya en el carrito</p>
+            ) : (
+                <ItemCount 
+                    initial={1} 
+                    stock={stock} 
+                    onAdd={handleAddToCart}
+                />
+            )}
+        </div>
     );
 };
 
