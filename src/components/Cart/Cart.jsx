@@ -3,10 +3,10 @@ import { useCart } from '../../Context/CartContext';
 import './Cart.css';
 
 const Cart = () => {
-    const { cartItems, removeItemFromCart, clearCart, addItemToCart } = useCart();
+    const { cartItems, removeFromCart, clearCart, addToCart } = useCart();
 
     const handleRemove = (item) => {
-        removeItemFromCart(item);
+        removeFromCart(item);
     };
 
     const handleClearCart = () => {
@@ -14,12 +14,12 @@ const Cart = () => {
     };
 
     const handleAddQuantity = (item) => {
-        addItemToCart(item);
+        addToCart(item);
     };
 
     const handleReduceQuantity = (item) => {
         if (item.quantity > 1) {
-            removeItemFromCart(item);
+            removeFromCart(item);
         } else {
             handleRemove(item);
         }
@@ -35,7 +35,7 @@ const Cart = () => {
                     <ul>
                         {cartItems.map(item => (
                             <li key={item.id}>
-                                <img src={item.image} alt={item.name} />
+                                <img src={item.img} alt={item.name} />
                                 <div>
                                     <h3>{item.name}</h3>
                                     <p>Precio: ${item.price}</p>
