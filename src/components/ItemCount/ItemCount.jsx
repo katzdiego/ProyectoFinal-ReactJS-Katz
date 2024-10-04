@@ -1,30 +1,20 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import './ItemCount.css';
 
 const ItemCount = ({ stock, initial, onAdd }) => {
     const [quantity, setQuantity] = useState(initial);
 
-    useEffect(() => {
-        if (initial > stock) {
-            setQuantity(stock);
-        }
-    }, [initial, stock]);
-
     const increment = () => {
         if (quantity < stock) {
-            setQuantity(prevQuantity => prevQuantity + 1);
+            setQuantity(quantity + 1);
         }
     };
 
     const decrement = () => {
         if (quantity > 1) {
-            setQuantity(prevQuantity => prevQuantity - 1);
+            setQuantity(quantity - 1);
         }
-    };
-
-    const handleAddToCart = () => {
-        onAdd(quantity);
     };
 
     return (
@@ -34,6 +24,7 @@ const ItemCount = ({ stock, initial, onAdd }) => {
                     className='Button' 
                     onClick={decrement} 
                     aria-label="Decrease quantity"
+                    disabled={quantity <= 1}
                 >
                     -
                 </button>
@@ -42,6 +33,7 @@ const ItemCount = ({ stock, initial, onAdd }) => {
                     className='Button' 
                     onClick={increment} 
                     aria-label="Increase quantity"
+                    disabled={quantity >= stock}
                 >
                     +
                 </button>
@@ -49,15 +41,13 @@ const ItemCount = ({ stock, initial, onAdd }) => {
             <div>
                 <button
                     className='Button'
-                    onClick={handleAddToCart}
-                    disabled={quantity <= 0}
+                    onClick={() => onAdd(quantity)}
+                    disabled={stock === 0 || quantity > stock || quantity <= 0}
                     aria-label={`Add ${quantity} items to cart`}
                 >
-                    Add to Cart
+                    Agregar al carrito
                 </button>
-                {quantity > stock && (
-                    <p style={{ color: 'red' }}>Exceeded stock limit!</p>
-                )}
+                {stock === 0 && <p style={{ color: 'red' }}>Out of stock</p>}
             </div>
         </div>
     );

@@ -3,61 +3,86 @@ import React, { createContext, useState, useContext } from "react";
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
-  const [cartItems, setCartItems] = useState([]);
+  const [cart, setCart] = useState([]);
 
-  const addToCart = (item) => {
-    if (!item.id || !item.quantity) {
-      console.error('El item debe tener un id y una cantidad.');
-      return;
-    }
+  const addToCart = (item, quantity) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(cartItem => cartItem.id === item.id);
 
-    const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
-
-    if (existingItem) {
-      if (existingItem.quantity + item.quantity <= item.stock) {
-        setCartItems(cartItems.map(cartItem =>
-          cartItem.id === item.id
-            ? { ...cartItem, quantity: cartItem.quantity + item.quantity }
-            : cartItem
-        ));
-      } else {
-        console.error(`No se puede agregar más del producto "${item.name}". Stock máximo alcanzado.`);
+      if (quantity <= 0) {
+        console.error("La cantidad debe ser mayor que 0.");
+        return prevCart;
       }
-    } else {
-      setCartItems([...cartItems, { ...item, quantity: item.quantity }]);
-    }
+
+      if (existingItem) {
+        const newQuantity = existingItem.quantity + quantity;
+
+        if (newQuantity > item.stock) {
+          console.error(`No puedes agregar más de ${item.stock} unidades. Ya tienes ${existingItem.quantity} en el carrito.`);
+          return prevCart;
+        }
+
+        return prevCart.map(cartItem =>
+          cartItem.id === item.id
+            ? { ...cartItem, quantity: newQuantity }
+            : cartItem
+        );
+      } else {
+        if (quantity > item.stock) {
+          console.error(`No puedes agregar ${quantity} unidades. Solo hay ${item.stock} en stock.`);
+          return prevCart;
+        }
+
+        return [...prevCart, { ...item, quantity }];
+      }
+    });
   };
 
-  const removeFromCart = (itemId) => {
-    const existingItem = cartItems.find(cartItem => cartItem.id === itemId);
+  const removeFromCart = (id) => {
+    setCart(prevCart => {
+      const existingItem = prevCart.find(cartItem => cartItem.id === id);
 
-    if (existingItem) {
+      if (!existingItem) {
+        console.error(`El producto con id "${id}" no está en el carrito.`);
+        return prevCart;
+      }
+
       if (existingItem.quantity === 1) {
-        setCartItems(cartItems.filter(cartItem => cartItem.id !== itemId));
+        return prevCart.filter(cartItem => cartItem.id !== id);
       } else {
-        setCartItems(cartItems.map(cartItem =>
-          cartItem.id === itemId
+        return prevCart.map(cartItem =>
+          cartItem.id === id
             ? { ...cartItem, quantity: cartItem.quantity - 1 }
             : cartItem
-        ));
+        );
       }
-    }
+    });
   };
 
   const clearCart = () => {
-    setCartItems([]);
+    setCart([]);
   };
 
-  const isInCart = (itemId) => {
-    return cartItems.some(cartItem => cartItem.id === itemId);
+  const isInCart = (id) => {
+    return cart.some(cartItem => cartItem.id === id);
   };
+
+  const cartTotalItems = cart.reduce((total, item) => total + (item.quantity || 0), 0);
+
+  const cartTotalPrice = cart.reduce((total, item) => {
+    const validPrice = typeof item.price === 'number' && !isNaN(item.price) ? item.price : 0;
+    const validQuantity = typeof item.quantity === 'number' && !isNaN(item.quantity) ? item.quantity : 0;
+    return total + (validQuantity * validPrice);
+  }, 0);
 
   const value = {
-    cartItems,
+    cart,
     addToCart,
     removeFromCart,
     clearCart,
-    isInCart
+    isInCart,
+    cartTotalItems,
+    cartTotalPrice,
   };
 
   return (

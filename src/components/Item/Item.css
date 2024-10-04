@@ -1,0 +1,16 @@
+.quantity-control {
+    margin-top: 10px;
+  }
+  
+  .quantity-control label {
+    margin-right: 5px;
+    font-weight: bold;
+  }
+  
+  .quantity-control input {
+    width: 50px;
+    padding: 5px;
+    text-align: center;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+  }

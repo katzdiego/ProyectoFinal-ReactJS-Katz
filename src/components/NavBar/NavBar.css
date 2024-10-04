@@ -11,6 +11,11 @@ nav h2 {
     font-size: 1.8rem;
     font-family: 'Arial', sans-serif;
     margin: 0;
+    color: white;
+}
+
+nav h2:hover {
+    color: #e3c62d;
 }
 
 nav div:first-of-type {
@@ -43,6 +48,15 @@ nav .cart-widget {
     margin-left: auto;
     display: flex;
     align-items: center;
+}
+
+nav a h2 {
+    color: white;
+    text-decoration: none;
+}
+
+nav a h2:hover {
+    color: #e3c62d;
 }
 
 nav button {

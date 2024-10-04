@@ -4,23 +4,24 @@ import { NavLink } from 'react-router-dom';
 import './CartWidget.css';
 
 const CartWidget = () => {
-  const { cartItems } = useCart();
+  const { cartTotalItems } = useCart();
 
-  // Verificar que cartItems sea un arreglo
-  const totalItems = Array.isArray(cartItems)
-    ? cartItems.reduce((total, item) => total + (item.quantity || 0), 0)
-    : 0;
+  const validTotalItems = typeof cartTotalItems === 'number' && !isNaN(cartTotalItems) ? cartTotalItems : 0;
+
+  if (validTotalItems === 0) {
+    return null;
+  }
 
   return (
     <div className="cart-widget">
-      {totalItems > 0 && (
-        <NavLink to="/cart" aria-label="Ir al carrito">
-          <div className="cart-container">
-            <span role="img" aria-label="carrito" aria-hidden="true">🛒</span>
-            <span className="item-count">{totalItems}</span>
-          </div>
-        </NavLink>
-      )}
+      <NavLink to="/cart" aria-label={`Tienes ${validTotalItems} artículos en tu carrito`}>
+        <div className="cart-container">
+          <span role="img" aria-hidden="true">🛒</span>
+          <span className="item-count" aria-label={`Cantidad de artículos en el carrito: ${validTotalItems}`}>
+            {validTotalItems}
+          </span>
+        </div>
+      </NavLink>
     </div>
   );
 };

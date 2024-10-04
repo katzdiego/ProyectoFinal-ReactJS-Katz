@@ -1,36 +1,56 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import ItemCount from '../ItemCount/ItemCount';
 import { useCart } from '../../Context/CartContext';
 import './ItemDetail.css';
 
-const ItemDetail = ({ id, name, descripcion, price, stock, img }) => {
-    const { addItemToCart, isInCart } = useCart();
+const ItemDetail = ({ id, name, img, category, description, price, stock }) => {
+    const [quantityAdded, setQuantityAdded] = useState(0);
+    const { addToCart } = useCart();
 
-    const handleAddToCart = (quantity) => {
-        if (quantity <= stock) {
-            addItemToCart({ id, name, price, stock, quantity });
-        } else {
-            console.error(`No se puede agregar más de ${stock} unidades de ${name}`);
-        }
+    const handleAdd = (quantity) => {
+        const item = { id, name, price, stock };
+        setQuantityAdded(quantity); 
+        addToCart(item, quantity);
+        console.log('Cantidad agregada:', quantity);
     };
 
     return (
-        <div className="item-detail">
-            <img src={img} alt={name} />
-            <h2>{name}</h2>
-            <p>{descripcion}</p>
-            <p>Precio: ${price.toFixed(2)}</p> 
-            <p>Stock disponible: {stock}</p>
-            {isInCart(id) ? (
-                <p>Producto ya en el carrito</p>
-            ) : (
-                <ItemCount 
-                    initial={1} 
-                    stock={stock} 
-                    onAdd={handleAddToCart}
+        <article className="CardItem">
+            <header className="Header">
+                <h2 className="ItemHeader">{name || "Producto sin nombre"}</h2>
+            </header>
+            <picture>
+                <img 
+                    src={img || "/path/to/default-image.jpg"}
+                    alt={name || "Imagen no disponible"} 
+                    className="ItemImg" 
                 />
-            )}
-        </div>
+            </picture>
+            <section>
+                <p className="Info">Categoría: {category || "Sin categoría"}</p>
+                <p className="Info">Descripción: {description || "Sin descripción disponible"}</p>
+                <p className="Info">Precio: {price != null ? `$${price}` : "No disponible"}</p>
+                <p className="Info">Stock disponible: {stock > 0 ? stock : "Sin stock disponible"}</p>
+            </section>
+            <footer className="ItemFooter">
+                {quantityAdded > 0 ? (
+                    <Link to="/cart" className="Option">
+                        Ir al carrito
+                    </Link>
+                ) : (
+                    stock > 0 ? (
+                        <ItemCount 
+                            initial={1} 
+                            stock={stock} 
+                            onAdd={handleAdd}
+                        />
+                    ) : (
+                        <p className="out-of-stock">Producto sin stock</p>
+                    )
+                )}
+            </footer>
+        </article>
     );
 };
 

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { getProducts } from '../../products';
 import './ItemListContainer.css';
 import ItemList from '../ItemList/ItemList';
+import { getProducts } from '../../firebase/db';
 
 const ItemListContainer = ({ greeting }) => {
     const [products, setProducts] = useState([]);
@@ -11,22 +11,23 @@ const ItemListContainer = ({ greeting }) => {
     const { idCategory } = useParams();
 
     useEffect(() => {
-        setLoading(true);
-        setError(null);
-        getProducts()
-            .then(response => {
+        const fetchProducts = async () => {
+            setLoading(true);
+            setError(null);
+            try {
+                const response = await getProducts();
                 const filteredProducts = idCategory 
                     ? response.filter(product => product.category === idCategory)
                     : response;
                 setProducts(filteredProducts);
-            })
-            .catch(error => {
+            } catch (error) {
                 console.error("Error al obtener los productos:", error);
                 setError('Hubo un problema al cargar los productos');
-            })
-            .finally(() => {
+            } finally {
                 setLoading(false);
-            });
+            }
+        };
+        fetchProducts();
     }, [idCategory]);
 
     return (
